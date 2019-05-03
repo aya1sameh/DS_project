@@ -10,7 +10,9 @@ class Motorcycle
 	int speed;		//meters it can move in one clock tick (in one timestep)
 	REGION	region;	//region of the motorcycle
 	STATUS	status;	//idle or in-service
+	int Distance;
 	int FinishTime;
+	int MotorHealth;
 
 public:
 	Motorcycle();
@@ -35,6 +37,12 @@ public:
 
 	int MotorGetFinishTime() const;
 	void MotorSetFinishTime(int r_Time);
+
+	int MotorGetDistance() const;
+	void MotorSetDistance(int r_D);
+
+	int MotorGetHealth() const;
+	void MotorSetHealth(int r_H);
 
 	virtual ~Motorcycle();
 };

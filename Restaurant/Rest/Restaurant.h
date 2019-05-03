@@ -18,6 +18,8 @@ private:
 	GUI *pGUI;
 	Queue<Event*> EventsQueue;	//Queue of all events that will be loaded from file
 	string AssignOrdersToMotor;
+	int AutoProm;
+	int normal[4],frozen[4],vip[4];
 	/// ==>
 	//Types of Active Orders Queues
 
@@ -60,17 +62,20 @@ private:
 
 	/// ==>
 	//Servised Orders
-	PQueueLinkedList<Order*,int> ServicedOrders;
-
-
-     int ServicedVIPOrders[4];
+	Queue<Order*> ServicedOrders;
+	  int ServicedVIPOrders[4];
 	 int ServicedFROZENOrders[4];
 	 int ServicedNORMALOrders[4];
 
+	 /// ==>
+	//Inservise Motors Lists
 
-
-
-
+	//1)Frozen Motors
+	PQueueLinkedList<Motorcycle*,int> DamagedFrozMotors[4];
+	//2)Normal Motors
+	PQueueLinkedList<Motorcycle*,int> DamagedNormalMotors[4];
+	//3)Fast Motors
+	PQueueLinkedList<Motorcycle*,int> DamagedFastMotors[4];
 
 
 public:
@@ -123,10 +128,14 @@ public:
 	/// ==>
 	//For Loading Function
 	void Load();
+	void Output();
+	char Region(int m);
 
 	void Finishing(int CurrentTimeStep);
 	void DeleteActiveOrders();
 	bool AllOrdersAREserved();
 	bool AllMotorsCameBack();
+	
+	void Repair(int);
 };
 #endif

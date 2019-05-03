@@ -42,6 +42,23 @@ int Order::GetType() const
 {
 	return type;
 }
+void Order::SetType(ORD_TYPE r_Type ) 
+{
+	type = r_Type;
+	switch (r_Type)	
+	{
+	case TYPE_NRM:
+
+		priority=0;
+		break;
+	case TYPE_FROZ:
+		priority=0;
+		break;
+	case TYPE_VIP:
+		priority=(totalMoney*0.5)+(ArrTime*0.2)+(Distance*0.3);
+		break;
+	};
+}
 void Order::SetArrivalTime(int d)
 {
 	ArrTime=d;
@@ -91,4 +108,8 @@ int Order::GetDistance() const
 int Order::GetPriority() const
 {
 	return priority;
+}
+void Order::SetPriority(int d)
+{
+	priority=d;
 }

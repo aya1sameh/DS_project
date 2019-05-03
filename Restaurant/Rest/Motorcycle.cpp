@@ -58,7 +58,19 @@ STATUS Motorcycle::MotorGetstatus()const
 }
 void Motorcycle::MotorSetstatus(STATUS r_Status)
 {
-	status=r_Status;
+	switch (r_Status)
+	{
+	case IDLE:
+		status=IDLE;
+		break;
+	case SERV:
+		status=SERV;
+	case InRep:
+		status=InRep;
+		break;
+	default:
+		break;
+	}
 }
 int Motorcycle::MotorGetFinishTime()const
 {
@@ -68,7 +80,22 @@ void Motorcycle::MotorSetFinishTime(int r_Time)
 {
 	FinishTime=r_Time;
 }
-
+int Motorcycle::MotorGetDistance() const
+{
+	return Distance;
+}
+void Motorcycle::MotorSetDistance(int r_D)
+{
+	Distance=r_D;
+}
+int Motorcycle::MotorGetHealth() const
+{
+	return MotorHealth;
+}
+void Motorcycle::MotorSetHealth(int r_H)
+{
+	MotorHealth=r_H;
+}
 	Motorcycle::~Motorcycle()
 {
 }

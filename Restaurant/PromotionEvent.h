@@ -15,3 +15,5 @@ public:
 	virtual void Execute(Restaurant *pRest);
 };
 
+
+

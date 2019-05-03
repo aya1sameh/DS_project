@@ -24,8 +24,6 @@ Restaurant::Restaurant()
 	{
 		ServicedNORMALOrders[i]=0;
 	}
-
-
 }
 
 //////////////////////////////////////////////
@@ -125,7 +123,7 @@ void Restaurant::ExecuteEvents(int CurrentTimeStep)
 
 Restaurant::~Restaurant()
 {
-		delete pGUI;
+	delete pGUI;
 }
 
 //////////////////////////////////////////////
@@ -169,7 +167,7 @@ Order* Restaurant::getFROZENOrders(int i)
 }
 void Restaurant::RemoveFromNORMALOrdersList(int Position,int i)
 {
-    ActiveNORMALOrder[i].remove(Position);
+	ActiveNORMALOrder[i].remove(Position);
 }
 
 //////////////////////////////////////////////
@@ -177,76 +175,27 @@ void Restaurant::RemoveFromNORMALOrdersList(int Position,int i)
 void Restaurant::Interactive_Mode()
 {
 	/////////////////////////////////////////////////////////
-	 string AssignOrdersToMotor;
+	string AssignOrdersToMotor;
 	pGUI->PrintMessage("Enter file name ^_^");
 	Load();
 	int CurrentTimeStep = 1;
 	pGUI->PrintMessage("Click on the mouse to deliver the order");
 	pGUI->waitForClick();
-	
-	while(!EventsQueue.isEmpty() || !AllOrdersAREserved() || !AllMotorsCameBack())
+
+	while(!EventsQueue.isEmpty()|| !AllOrdersAREserved() || !AllMotorsCameBack())
 	{    AssignOrdersToMotor="";
-		ExecuteEvents(CurrentTimeStep);
-
-		AssighnOrdersToMotors(CurrentTimeStep,AssignOrdersToMotor);
-		Finishing(CurrentTimeStep);
-		ResetWindowALL();
-		pGUI->PrintMessage("Click on the mouse to deliver the next order  "+to_string(CurrentTimeStep));
-		printOutput(AssignOrdersToMotor);
-		CurrentTimeStep++;
-		pGUI->waitForClick();
-	}
-	AssighnOrdersToMotors(CurrentTimeStep,AssignOrdersToMotor);
+	ExecuteEvents(CurrentTimeStep);
 	Finishing(CurrentTimeStep);
+	//Repair(CurrentTimeStep);
+	AssighnOrdersToMotors(CurrentTimeStep,AssignOrdersToMotor);
 	ResetWindowALL();
-	pGUI->PrintMessage("generation done, click to END program");
-
-	/////////////////////////////////////////////////////////////
-	//Just to test
-	for(int i=11;i<300;i++)
-	{
-		Finishing(i);
+	pGUI->PrintMessage("Click on the mouse to deliver the next order  "+to_string(CurrentTimeStep));
+	printOutput(AssignOrdersToMotor);
+	CurrentTimeStep++;
+	pGUI->waitForClick();
 	}
-	/*while(!ServicedOrders.isEmpty())
-	{
-		Order*ptr;
-		ServicedOrders.dequeue(ptr);
-		cout<<"\n Order with ID: "<<ptr->GetID()<<" Finish Time: "<<ptr->GetFinishTime()<<" Waiting Time: "<<ptr->GetWaitingTime()<<" Arrival Time "<<ptr->GetArrivalTime()<<" Service Time: "<<ptr->GetServTime();	
-	}*/
-	//cout<<"\n----------------------------------------------------\n Please Work \n";
-	//for (int i=0;i<4;i++)
-	//{
-	//	while(!AssighnedVIPOrder[i].isEmpty())
-	//	{
-	//		Order*ptr;
-	//		AssighnedVIPOrder[i].dequeue(ptr);
-	//		cout<<"\n Order with ID: "<<ptr->GetID()<<" Finish Time: "<<ptr->GetFinishTime()<<" Waiting Time: "<<ptr->GetWaitingTime()<<" Arrival Time "<<ptr->GetArrivalTime()<<" Service Time: "<<ptr->GetServTime();
-	//	}
-	//	cout<<"\n----------------------------------------------------\n";
-	//}
-	//for (int i=0;i<4;i++)
-	//{
-	//	while(!AssighnedNORMALOrder[i].isEmpty())
-	//	{
-	//		Order*ptr;
-	//		AssighnedNORMALOrder[i].dequeue(ptr);
-	//		cout<<"\n Order with ID: "<<ptr->GetID()<<" Finish Time: "<<ptr->GetFinishTime()<<" Waiting Time: "<<ptr->GetWaitingTime()<<" Arrival Time "<<ptr->GetArrivalTime()<<" Service Time: "<<ptr->GetServTime();
-	//	}
-	//	cout<<"\n----------------------------------------------------\n";
-	//}
-	//for (int i=0;i<4;i++)
-	//{
-	//	while(!AssighnedFROZENOrder[i].isEmpty())
-	//	{
-	//		Order*ptr;
-	//		AssighnedFROZENOrder[i].dequeue(ptr);
-	//		cout<<"\n Order with ID: "<<ptr->GetID()<<" Finish Time: "<<ptr->GetFinishTime()<<" Waiting Time: "<<ptr->GetWaitingTime()<<" Arrival Time "<<ptr->GetArrivalTime()<<" Service Time: "<<ptr->GetServTime();
-	//	}
-	//	cout<<"\n----------------------------------------------------\n";
-	//}
-	//
-	////////////////////////////////////////////////////////////////
-
+	pGUI->PrintMessage("generation done, click to END program");
+	Output();
 	pGUI->waitForClick();
 
 }
@@ -325,84 +274,83 @@ void Restaurant:: Load( )
 	inputFile.open(filename);
 	if(inputFile.is_open())
 	{
-	int s1,s2,s3;
-	inputFile>>s1>>s2>>s3;
+		int s1,s2,s3;
+		inputFile>>s1>>s2>>s3;
 
-	int normal[4],frozen[4],vip[4];
-	for(int i=0;i<4;i++)
-	{
-		inputFile>>normal[i]>>frozen[i]>>vip[i];
-	}
-	///////////////////////////////////////////////
-	for(int i=0;i<normal[0];i++)
-	{
-		Motorcycle* pM=new Motorcycle(i+1,s1);
-		NormalMotors[0].enqueue(pM,s1);
-	}
-	for(int i=0;i<frozen[0];i++)
-	{
-		Motorcycle* pM=new Motorcycle(i+1,s2);
-		FrozMotors[0].enqueue(pM,s2);
-	}
-	for(int i=0;i<vip[0];i++)
-	{
-		Motorcycle* pM=new Motorcycle(i+1,s3);
-		FastMotors[0].enqueue(pM,s3);
-	}
-	/////////////////////////////////////////////
-	for(int i=0;i<normal[1];i++)
-	{
-		Motorcycle* pM=new Motorcycle(i+1,s1);
-		NormalMotors[1].enqueue(pM,s1);
-	}
-	for(int i=0;i<frozen[1];i++)
-	{
-		Motorcycle* pM=new Motorcycle(i+1,s2);
-		FrozMotors[1].enqueue(pM,s2);
-	}
-	for(int i=0;i<vip[1];i++)
-	{
-		Motorcycle* pM=new Motorcycle(i+1,s3);
-		FastMotors[1].enqueue(pM,s3);
-	}
-	///////////////////////////////////////////
-	for(int i=0;i<normal[2];i++)
-	{
-		Motorcycle* pM=new Motorcycle(i+1,s1);
-		NormalMotors[2].enqueue(pM,s1);
-	}
-	for(int i=0;i<frozen[2];i++)
-	{
-		Motorcycle* pM=new Motorcycle(i+1,s2);
-		FrozMotors[2].enqueue(pM,s2);
-	}
-	for(int i=0;i<vip[2];i++)
-	{
-		Motorcycle* pM=new Motorcycle(i+1,s3);
-		FastMotors[2].enqueue(pM,s3);
-	}
-	///////////////////////////////////////////
-	for(int i=0;i<normal[3];i++)
-	{
-		Motorcycle* pM=new Motorcycle(i+1,s1);
-		NormalMotors[3].enqueue(pM,s1);
-	}
-	for(int i=0;i<frozen[3];i++)
-	{
-		Motorcycle* pM=new Motorcycle(i+1,s2);
-		FrozMotors[3].enqueue(pM,s2);
-	}
-	for(int i=0;i<vip[3];i++)
-	{
-		Motorcycle* pM=new Motorcycle(i+1,s3);
-		FastMotors[3].enqueue(pM,s3);
-	}
+		int normal[4],frozen[4],vip[4];
+		for(int i=0;i<4;i++)
+		{
+			inputFile>>normal[i]>>frozen[i]>>vip[i];
+		}
+		///////////////////////////////////////////////
+		for(int i=0;i<normal[0];i++)
+		{
+			Motorcycle* pM=new Motorcycle(i+1,s1);
+			NormalMotors[0].enqueue(pM,s1);
+		}
+		for(int i=0;i<frozen[0];i++)
+		{
+			Motorcycle* pM=new Motorcycle(i+1,s2);
+			FrozMotors[0].enqueue(pM,s2);
+		}
+		for(int i=0;i<vip[0];i++)
+		{
+			Motorcycle* pM=new Motorcycle(i+1,s3);
+			FastMotors[0].enqueue(pM,s3);
+		}
+		/////////////////////////////////////////////
+		for(int i=0;i<normal[1];i++)
+		{
+			Motorcycle* pM=new Motorcycle(i+1,s1);
+			NormalMotors[1].enqueue(pM,s1);
+		}
+		for(int i=0;i<frozen[1];i++)
+		{
+			Motorcycle* pM=new Motorcycle(i+1,s2);
+			FrozMotors[1].enqueue(pM,s2);
+		}
+		for(int i=0;i<vip[1];i++)
+		{
+			Motorcycle* pM=new Motorcycle(i+1,s3);
+			FastMotors[1].enqueue(pM,s3);
+		}
+		///////////////////////////////////////////
+		for(int i=0;i<normal[2];i++)
+		{
+			Motorcycle* pM=new Motorcycle(i+1,s1);
+			NormalMotors[2].enqueue(pM,s1);
+		}
+		for(int i=0;i<frozen[2];i++)
+		{
+			Motorcycle* pM=new Motorcycle(i+1,s2);
+			FrozMotors[2].enqueue(pM,s2);
+		}
+		for(int i=0;i<vip[2];i++)
+		{
+			Motorcycle* pM=new Motorcycle(i+1,s3);
+			FastMotors[2].enqueue(pM,s3);
+		}
+		///////////////////////////////////////////
+		for(int i=0;i<normal[3];i++)
+		{
+			Motorcycle* pM=new Motorcycle(i+1,s1);
+			NormalMotors[3].enqueue(pM,s1);
+		}
+		for(int i=0;i<frozen[3];i++)
+		{
+			Motorcycle* pM=new Motorcycle(i+1,s2);
+			FrozMotors[3].enqueue(pM,s2);
+		}
+		for(int i=0;i<vip[3];i++)
+		{
+			Motorcycle* pM=new Motorcycle(i+1,s3);
+			FastMotors[3].enqueue(pM,s3);
+		}
 
-	int promlimit;
-	inputFile>>promlimit;
-	int numofevents;
-	inputFile>>numofevents;
-	cout<<"num of events done"<<endl;
+		inputFile>>AutoProm;
+		int numofevents;
+		inputFile>>numofevents;
+		cout<<"num of events done"<<endl;
 		Event* ptr;
 		for(int i=0;i<numofevents;i++)
 		{
@@ -459,7 +407,7 @@ void Restaurant::printOutput(string &s)
 	pGUI->PrintMessage("RegionB :  ACorders:ViP: "+to_string(ActiveVIPOrder[1].getSize())+"  FROZEN: "+to_string(ActiveFROZENOrder[1].getSize())+"   NORMAL: "+to_string(ActiveNORMALOrder[1].getSize())+"       SERVED:VIP: "+to_string(ServicedVIPOrders[1])+" FROZ: "+to_string(ServicedFROZENOrders[1])+" NORM: "+to_string(ServicedNORMALOrders[1])+"        Motorcycles:ViP: "+to_string(FastMotors[1].getSize())+" FROZEN: "+to_string(FrozMotors[1].getSize())+" NORMAL: "+to_string(NormalMotors[1].getSize()),2);
 	pGUI->PrintMessage("RegionC :  ACorders:ViP: "+to_string(ActiveVIPOrder[2].getSize())+"  FROZEN: "+to_string(ActiveFROZENOrder[2].getSize())+"   NORMAL: "+to_string(ActiveNORMALOrder[2].getSize())+"       SERVED:VIP: "+to_string(ServicedVIPOrders[2])+" FROZ: "+to_string(ServicedFROZENOrders[2])+" NORM: "+to_string(ServicedNORMALOrders[2])+"        Motorcycles:ViP: "+to_string(FastMotors[2].getSize())+" FROZEN: "+to_string(FrozMotors[2].getSize())+" NORMAL: "+to_string(NormalMotors[2].getSize()),3);
 	pGUI->PrintMessage("RegionD :  ACorders:ViP: "+to_string(ActiveVIPOrder[3].getSize())+"  FROZEN: "+to_string(ActiveFROZENOrder[3].getSize())+"   NORMAL: "+to_string(ActiveNORMALOrder[3].getSize())+"       SERVED:VIP: "+to_string(ServicedVIPOrders[3])+" FROZ: "+to_string(ServicedFROZENOrders[3])+" NORM: "+to_string(ServicedNORMALOrders[3])+"        Motorcycles:ViP: "+to_string(FastMotors[3].getSize())+" FROZEN: "+to_string(FrozMotors[3].getSize())+" NORMAL: "+to_string(NormalMotors[3].getSize()),4);
-	 pGUI->PrintMessage(s,5);
+	pGUI->PrintMessage(s,5);
 }
 
 void Restaurant::AssighnOrdersToMotors(int TimeStep,string&s)
@@ -510,48 +458,40 @@ void Restaurant::AssighnOrdersToMotors(int TimeStep,string&s)
 }
 void Restaurant::AssighnOrder_PQueue(int TimeStep,PQueueLinkedList<Order*,int>& WaitingOrders,PQueueLinkedList<Order*,int>& InServiceOrders,PQueueLinkedList<Motorcycle*,int>& AvailableMotors,PQueueLinkedList<Motorcycle*,int>& InServiceeMotors,string&s)
 {
-	int k=WaitingOrders.getSize();
-	for(int i=0;i<k;i++)
-	{
+
 		Order*pOrd;
 		Motorcycle* pMotor;
-		if(!AvailableMotors.isEmpty())
-		{
-			WaitingOrders.dequeue(pOrd);
-			AvailableMotors.dequeue(pMotor);
-			pOrd->SetServTime(pOrd->GetDistance()/(pMotor->MotorGetSpeed()));
-			pOrd->SetWaitingTime(TimeStep-pOrd->GetArrivalTime());
-			pOrd->SetFinishTime(TimeStep+pOrd->GetServTime());
-			pMotor->MotorSetFinishTime(pOrd->GetServTime()+pOrd->GetFinishTime());
-			InServiceOrders.enqueue(pOrd,-pOrd->GetFinishTime());
-			InServiceeMotors.enqueue(pMotor,-pMotor->MotorGetFinishTime());
-			
-			if (pMotor->MotorGetType()==TYPE_VIP)
-				s+="V "+to_string(pMotor->MotorGetId())+" ";
-			else if(pMotor->MotorGetType()==TYPE_FROZ)
-				s+="F "+to_string(pMotor->MotorGetId())+" ";
-			else
-				s+="N "+to_string(pMotor->MotorGetId())+" ";
-			
-			if (pOrd->GetType()==TYPE_VIP)
-				s+="(V "+to_string(pOrd->GetID())+")    ";
-			else if(pOrd->GetType()==TYPE_FROZ)
-				s+="(F "+to_string(pOrd->GetID())+")    ";
-			else
-				s+="(N "+to_string(pOrd->GetID())+")    ";
-		}
+		while(!AvailableMotors.isEmpty()&&!WaitingOrders.isEmpty())
+		{	WaitingOrders.dequeue(pOrd);
+		AvailableMotors.dequeue(pMotor);
+		pOrd->SetServTime(pOrd->GetDistance()/(pMotor->MotorGetSpeed()));
+		pOrd->SetWaitingTime(TimeStep-pOrd->GetArrivalTime());
+		pOrd->SetFinishTime(TimeStep+pOrd->GetServTime());
+		pMotor->MotorSetFinishTime(pOrd->GetServTime()+pOrd->GetFinishTime());
+		pMotor->MotorSetDistance(pOrd->GetServTime()*2);
+		InServiceOrders.enqueue(pOrd,-pOrd->GetFinishTime());
+		InServiceeMotors.enqueue(pMotor,-pMotor->MotorGetFinishTime());
+		if (pMotor->MotorGetType()==TYPE_VIP)
+			s+="V "+to_string(pMotor->MotorGetId())+" ";
+		else if(pMotor->MotorGetType()==TYPE_FROZ)
+			s+="F "+to_string(pMotor->MotorGetId())+" ";
 		else
-			return;
+			s+="N "+to_string(pMotor->MotorGetId())+" ";
+
+		//if (pOrd->GetType()==TYPE_VIP)
+		s+="(V "+to_string(pOrd->GetID())+")    ";
+		/*	else if(pOrd->GetType()==TYPE_FROZ)
+		s+="(F "+to_string(pOrd->GetID())+")    ";
+		else
+		s+="(N "+to_string(pOrd->GetID())+")    ";*/
 	}
 }
 void Restaurant::AssighnOrder_Queue(int TimeStep,Queue <Order*>& WaitingOrders,PQueueLinkedList<Order*,int>& InServiceOrders,PQueueLinkedList<Motorcycle*,int>& AvailableMotors,PQueueLinkedList<Motorcycle*,int>& InServiceeMotors,string&s)
 {
-	int k=WaitingOrders.getSize();
-	for(int i=0;i<k;i++)
-	{
+
 		Order*pOrd;
 		Motorcycle* pMotor;
-		if(!AvailableMotors.isEmpty())
+		while(!AvailableMotors.isEmpty()&&!WaitingOrders.isEmpty())
 		{
 			WaitingOrders.dequeue(pOrd);
 			AvailableMotors.dequeue(pMotor);
@@ -559,6 +499,7 @@ void Restaurant::AssighnOrder_Queue(int TimeStep,Queue <Order*>& WaitingOrders,P
 			pOrd->SetWaitingTime(TimeStep-pOrd->GetArrivalTime());
 			pOrd->SetFinishTime((TimeStep+pOrd->GetServTime()));
 			pMotor->MotorSetFinishTime(pOrd->GetServTime()+pOrd->GetFinishTime());
+			pMotor->MotorSetDistance(pOrd->GetServTime()*2);
 			InServiceOrders.enqueue(pOrd,-pOrd->GetFinishTime());
 			InServiceeMotors.enqueue(pMotor,-pMotor->MotorGetFinishTime());
 
@@ -568,58 +509,73 @@ void Restaurant::AssighnOrder_Queue(int TimeStep,Queue <Order*>& WaitingOrders,P
 				s+="F "+to_string(pMotor->MotorGetId())+" ";
 			else
 				s+="N "+to_string(pMotor->MotorGetId())+" ";
-			
-			if (pOrd->GetType()==TYPE_VIP)
-				s+="(V "+to_string(pOrd->GetID())+")    ";
-			else if(pOrd->GetType()==TYPE_FROZ)
-				s+="(F "+to_string(pOrd->GetID())+")    ";
-			else
-				s+="(N "+to_string(pOrd->GetID())+")    ";
+
+			//if (pOrd->GetType()==TYPE_VIP)
+			//s+="(V "+to_string(pOrd->GetID())+")    ";
+			//else if(pOrd->GetType()==TYPE_FROZ)
+			s+="(F "+to_string(pOrd->GetID())+")    ";
+			//else
+			//s+="(N "+to_string(pOrd->GetID())+")    ";
 		}
-		else
-			return;
-	}
 }
 void Restaurant::AssighnOrder_List(int TimeStep,LinkedList<Order*>& WaitingOrders,PQueueLinkedList<Order*,int>& InServiceOrders,PQueueLinkedList<Motorcycle*,int>& AvailableMotors,PQueueLinkedList<Motorcycle*,int>& InServiceeMotors,string&s)
 {
-	int k=WaitingOrders.getSize();
-	for(int i=0;i<k;i++)
-	{
+	
 		Order*pOrd;
 		Motorcycle* pMotor;
-		if(!AvailableMotors.isEmpty())
+		while(!AvailableMotors.isEmpty()&&!WaitingOrders.isEmpty())
 		{
+
 			WaitingOrders.DeleteLast(pOrd);
 			AvailableMotors.dequeue(pMotor);
 			pOrd->SetServTime(pOrd->GetDistance()/(pMotor->MotorGetSpeed()));
 			pOrd->SetWaitingTime(TimeStep-pOrd->GetArrivalTime());
 			pOrd->SetFinishTime((TimeStep+pOrd->GetServTime()));
 			pMotor->MotorSetFinishTime(pOrd->GetServTime()+pOrd->GetFinishTime());
+			pMotor->MotorSetDistance(pOrd->GetDistance()*2);
 			InServiceOrders.enqueue(pOrd,-(pOrd->GetFinishTime()));
 			InServiceeMotors.enqueue(pMotor,-(pMotor->MotorGetFinishTime()));
 
-		if (pMotor->MotorGetType()==TYPE_VIP)
+			if (pMotor->MotorGetType()==TYPE_VIP)
 				s+="V "+to_string(pMotor->MotorGetId())+" ";
 			else if(pMotor->MotorGetType()==TYPE_FROZ)
 				s+="F "+to_string(pMotor->MotorGetId())+" ";
 			else
 				s+="N "+to_string(pMotor->MotorGetId())+" ";
-			
-			if (pOrd->GetType()==TYPE_VIP)
-				s+="(V "+to_string(pOrd->GetID())+")    ";
+
+			/*if (pOrd->GetType()==TYPE_VIP)
+			s+="(V "+to_string(pOrd->GetID())+")    ";
 			else if(pOrd->GetType()==TYPE_FROZ)
-				s+="(F "+to_string(pOrd->GetID())+")    ";
-			else
-				s+="(N "+to_string(pOrd->GetID())+")    ";
-			
+			s+="(F "+to_string(pOrd->GetID())+")    ";
+			else*/
+			s+="(N "+to_string(pOrd->GetID())+")    ";
+
 		}
-		else
-			/*if(TimeStep-pOrd->GetArrivalTime()>10)
+		//int k=WaitingOrders.getSize();
+		while(!WaitingOrders.isEmpty()&&TimeStep-WaitingOrders.getEntry(WaitingOrders.getSize())->GetArrivalTime()>=AutoProm)
+		{
+			WaitingOrders.DeleteLast(pOrd);
+			pOrd->SetType(TYPE_VIP);
+			if(pOrd)
 			{
-				Promote this order
-			}*/
-			return;
-	}
+				switch(pOrd->GetRegion())
+				{
+				case A_REG:
+					AddtoVipOrders(pOrd,0);
+					break;
+				case B_REG:
+					AddtoVipOrders(pOrd,1);
+					break;
+				case C_REG:
+					AddtoVipOrders(pOrd,2);
+					break;
+				case D_REG:
+					AddtoVipOrders(pOrd,3);
+					break;
+				}
+			}
+		}
+		return;
 }
 
 void Restaurant::Finishing(int CurrentTimeStep)
@@ -658,7 +614,7 @@ void Restaurant::Finishing(int CurrentTimeStep)
 	while(!TempPQueue.isEmpty())
 	{
 		TempPQueue.dequeue(pOrd);
-			ServicedOrders.enqueue(pOrd,pOrd->GetFinishTime());
+		ServicedOrders.enqueue(pOrd);
 	}
 
 	Motorcycle* pMotor;
@@ -669,14 +625,38 @@ void Restaurant::Finishing(int CurrentTimeStep)
 			if(pMotor->MotorGetFinishTime()>CurrentTimeStep )
 				break;
 			InserviseFrozMotors[i].dequeue(pMotor);
-			FrozMotors[i].enqueue(pMotor,pMotor->MotorGetSpeed());
+			pMotor->MotorSetFinishTime(0);
+			pMotor->MotorSetHealth(pMotor->MotorGetHealth()-pMotor->MotorGetHealth()*(1-pMotor->MotorGetDistance()/1000));
+			pMotor->MotorSetDistance(0);
+		/*	if(pMotor->MotorGetHealth()<5)
+			{
+				pMotor->MotorSetFinishTime(CurrentTimeStep+10-pMotor->MotorGetHealth());
+				DamagedFrozMotors[i].enqueue(pMotor,-pMotor->MotorGetFinishTime());
+				cout<<"\n Motor with Health "<<pMotor->MotorGetHealth()<<" and FinishTime= "<<pMotor->MotorGetFinishTime();
+			}
+			else
+			{*/
+				FrozMotors[i].enqueue(pMotor,pMotor->MotorGetSpeed());
+			//}
 		}
 		while( InserviseNormalMotors[i].peekFront(pMotor) )	
 		{
 			if(pMotor->MotorGetFinishTime()>CurrentTimeStep )
 				break;
 			InserviseNormalMotors[i].dequeue(pMotor);
-			NormalMotors[i].enqueue(pMotor,pMotor->MotorGetSpeed());
+			pMotor->MotorSetFinishTime(0);
+			pMotor->MotorSetHealth(pMotor->MotorGetHealth()-pMotor->MotorGetHealth()*(1-pMotor->MotorGetDistance()/1000));
+			pMotor->MotorSetDistance(0);
+			/*if(pMotor->MotorGetHealth()<5)
+			{
+				pMotor->MotorSetFinishTime(CurrentTimeStep+10-pMotor->MotorGetHealth());
+				DamagedNormalMotors[i].enqueue(pMotor,-pMotor->MotorGetFinishTime());
+				cout<<"\n Motor with Health "<<pMotor->MotorGetHealth()<<" and FinishTime= "<<pMotor->MotorGetFinishTime();
+			}
+			else
+			{*/
+				NormalMotors[i].enqueue(pMotor,pMotor->MotorGetSpeed());
+			//}
 		}
 
 		while( InserviseFastMotors[i].peekFront(pMotor) )	
@@ -684,6 +664,57 @@ void Restaurant::Finishing(int CurrentTimeStep)
 			if(pMotor->MotorGetFinishTime()>CurrentTimeStep )
 				break;
 			InserviseFastMotors[i].dequeue(pMotor);
+			pMotor->MotorSetFinishTime(0);
+			pMotor->MotorSetHealth(pMotor->MotorGetHealth()-pMotor->MotorGetHealth()*(1-pMotor->MotorGetDistance()/1000));
+			pMotor->MotorSetDistance(0);
+			/*if(pMotor->MotorGetHealth()<5)
+			{
+				pMotor->MotorSetFinishTime(CurrentTimeStep+5-pMotor->MotorGetHealth());
+				DamagedFastMotors[i].enqueue(pMotor,-pMotor->MotorGetFinishTime());
+				cout<<"\n Motor with Health "<<pMotor->MotorGetHealth()<<" and FinishTime= "<<pMotor->MotorGetFinishTime();
+			}
+			else
+			{*/
+				FastMotors[i].enqueue(pMotor,pMotor->MotorGetSpeed());
+		//	}
+		}
+	}
+}
+void Restaurant::Repair(int CurrentTimeStep)
+{
+	Motorcycle* pMotor;
+	for(int i=0;i<4;i++)
+	{
+		while( DamagedFrozMotors[i].peekFront(pMotor) )	
+		{
+			if(pMotor->MotorGetFinishTime()>CurrentTimeStep )
+				break;
+			DamagedFrozMotors[i].dequeue(pMotor);
+			pMotor->MotorSetFinishTime(0);
+			pMotor->MotorSetHealth(10);
+			pMotor->MotorSetDistance(0);
+
+			FrozMotors[i].enqueue(pMotor,pMotor->MotorGetSpeed());
+		}
+		while( DamagedNormalMotors[i].peekFront(pMotor) )	
+		{
+			if(pMotor->MotorGetFinishTime()>CurrentTimeStep )
+				break;
+			DamagedNormalMotors[i].dequeue(pMotor);
+			pMotor->MotorSetFinishTime(0);
+			pMotor->MotorSetHealth(10);
+			pMotor->MotorSetDistance(0);
+			NormalMotors[i].enqueue(pMotor,pMotor->MotorGetSpeed());
+		}
+
+		while( DamagedFastMotors[i].peekFront(pMotor) )	
+		{
+			if(pMotor->MotorGetFinishTime()>CurrentTimeStep )
+				break;
+			DamagedFastMotors[i].dequeue(pMotor);
+			pMotor->MotorSetFinishTime(0);
+			pMotor->MotorSetHealth(10);
+			pMotor->MotorSetDistance(0);
 			FastMotors[i].enqueue(pMotor,pMotor->MotorGetSpeed());
 		}
 	}
@@ -694,13 +725,13 @@ bool Restaurant::AllOrdersAREserved()
 	int checkF=0;
 	int checkN=0;
 	for (int i = 0; i < 4; i++)
-   {  if(ActiveVIPOrder[i].isEmpty()) 
-		checkV++;
-	  if(ActiveNORMALOrder[i].isEmpty()) 
-		  checkN++;
-	  if(ActiveFROZENOrder[i].isEmpty()) 
-	     checkF++;
-    }
+	{  if(ActiveVIPOrder[i].isEmpty()) 
+	checkV++;
+	if(ActiveNORMALOrder[i].isEmpty()) 
+		checkN++;
+	if(ActiveFROZENOrder[i].isEmpty()) 
+		checkF++;
+	}
 
 
 	if (checkV==4 && checkF==4 && checkN==4 )
@@ -716,13 +747,13 @@ bool Restaurant::AllMotorsCameBack()
 	int checkF=0;
 	int checkN=0;
 	for (int i = 0; i < 4; i++)
-   {  if(InserviseFastMotors[i].isEmpty()) 
-		checkV++;
-	  if(InserviseNormalMotors[i].isEmpty()) 
-		  checkN++;
-	  if(InserviseFrozMotors[i].isEmpty()) 
-	     checkF++;
-    }
+	{  if(InserviseFastMotors[i].isEmpty()) 
+	checkV++;
+	if(InserviseNormalMotors[i].isEmpty()) 
+		checkN++;
+	if(InserviseFrozMotors[i].isEmpty()) 
+		checkF++;
+	}
 
 
 	if (checkV==4 && checkF==4 && checkN==4 )
@@ -731,4 +762,138 @@ bool Restaurant::AllMotorsCameBack()
 		return false;
 
 
+}
+void Restaurant::Output()
+{
+	string filename;
+	ofstream outfile;
+	pGUI->PrintMessage("Enter outputfile name ^_^");
+	filename=pGUI->GetString()+".txt";
+	outfile.open(filename);
+	if(outfile.is_open(),ios::trunc)
+	{
+		outfile<<"FT" <<"\t"<<"ID"<<"\t"<<"AT"<<"\t"<<"WT"<<"\t"<<"ST"<<endl;
+	/*	int NA=0;
+		int VA=0;
+		int FA=0;
+		int NB=0;
+		int VB=0;
+		int FB=0;
+		int NC=0;
+		int VC=0;
+		int FC=0;
+		int ND=0;
+		int VD=0;
+		int FD=0;
+		int n[4];
+        int v[4];
+		int f[4];
+		int O[4];*/
+	while(!ServicedOrders.isEmpty())
+	{
+		Order*ptr; 
+		ServicedOrders.dequeue(ptr);
+			outfile<<ptr->GetFinishTime()<<"\t"<<ptr->GetID()<<"\t"<<ptr->GetArrivalTime()<<"\t"<<ptr->GetWaitingTime()<<"\t"<<ptr->GetServTime()<<endl;
+	}
+//			if(ptr->GetRegion()==0&&ptr->GetType()==0)
+//		{
+//	     NA++;
+//	     n[0]=NA;
+//		}
+//		else if(ptr->GetRegion()==0&&ptr->GetType()==1)
+//		{
+//			FA++;
+//			f[0]=FA;
+//		}
+//		else if(ptr->GetRegion()==0&&ptr->GetType()==2)
+//		{
+//		VA++;
+//			v[0]=VA;
+//		}
+//		else if(ptr->GetRegion()==1&ptr->GetType()==0)
+//		{
+//			NB++;
+//			n[1]=NB;
+//		}
+//		else if(ptr->GetRegion()==1&&ptr->GetType()==1)
+//		{
+//		FB++;
+//		f[1]=FB;
+//		}
+//		else if(ptr->GetRegion()==1&&ptr->GetType()==2)
+//		{
+//			VB++;
+//			v[1]=VB;
+//		
+//		}
+//		else if(ptr->GetRegion()==2&&ptr->GetType()==0)
+//		{
+//			NC++;
+//			n[2]=NC;
+//		}
+//		else if(ptr->GetRegion()==2&&ptr->GetType()==1)
+//		{
+//		FC++;
+//			f[2]=FC;
+//		}
+//		else if(ptr->GetRegion()==2&&ptr->GetType()==2)
+//		{
+//			VC++;
+//			v[2]=VC;
+//			
+//		}
+//
+//		else if(ptr->GetRegion()==3&&ptr->GetType()==0)
+//		{
+//			ND++;
+//			n[3]=ND;
+//		}
+//else if(ptr->GetRegion()==3&&ptr->GetType()==1)
+//		{
+//			FD++;
+//		f[3]=FD;
+//		}
+//		else if(ptr->GetRegion()==3&&ptr->GetType()==2)
+//		{
+//			VD++;
+//			v[3]=VD;
+//}
+//O[0]=n[0]+v[0]+f[0];
+//O[1]=n[1]+v[1]+f[1];
+//O[2]=n[2]+v[2]+f[2];
+//O[3]=n[3]+v[3]+f[3];
+//	}
+	for(int i=0;i<4;i++)
+	{
+			outfile<<"Region"<<" "<<Region(i)<<":"<<endl;
+		int m=normal[i]+frozen[i]+vip[i];
+		
+	outfile<<"  "<<"Orders:"<<ServicedNORMALOrders[i]+ServicedFROZENOrders[i]+ServicedVIPOrders[i]<<" "<<"Norm:"<<ServicedNORMALOrders[i]<<" "<<"Froz:"<<ServicedFROZENOrders[i]<<" "<<"VIP:"<<ServicedVIPOrders[i]<<endl;
+	outfile<<"  "<<"Motocycles:"<<NormalMotors[i].getSize()+FrozMotors[i].getSize()+FastMotors[i].getSize()<<"  "<<"Norm:"<<NormalMotors[i].getSize()<<" "<<"Froz:"<<FrozMotors[i].getSize()<<" "<<"Fast:"<<FastMotors[i].getSize()<<endl;
+
+	}
+	outfile.close();
+}
+}
+char Restaurant::Region(int m)
+{
+	char p;
+	if(m==0)
+	{
+		p='A';
+	}
+	else	if(m==1)
+	{
+		p='B';
+	}
+	else if(m==2)
+	{
+		p='C';
+	}
+	else if(m==3)
+	{
+		p='D';
+	}
+
+	return p;
 }

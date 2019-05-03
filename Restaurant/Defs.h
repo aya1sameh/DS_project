@@ -24,7 +24,8 @@ enum ORD_TYPE	//types of orders
 enum STATUS	//status of motorcycles
 {
 	IDLE,	//idle ==> waiting to be assigned at order
-	SERV	//is-service ==> is delivering at order but hasn't returned yet.
+	SERV,	//is-service ==> is delivering at order but hasn't returned yet.
+	InRep
 };
 enum PROG_MODE	//mode of the program interface
 {

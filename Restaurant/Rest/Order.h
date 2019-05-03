@@ -44,6 +44,9 @@ public:
 	void SetServTime(int d);
 	int GetServTime() const;
 
+	void SetPriority(int d);
+	void SetType(ORD_TYPE TY ) ;
+
 	int GetPriority() const;
 };
 
