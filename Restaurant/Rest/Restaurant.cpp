@@ -274,83 +274,45 @@ void Restaurant:: Load( )
 	inputFile.open(filename);
 	if(inputFile.is_open())
 	{
-		int s1,s2,s3;
-		inputFile>>s1>>s2>>s3;
+	int s1,s2,s3;
+	inputFile>>s1>>s2>>s3;
 
-		int normal[4],frozen[4],vip[4];
-		for(int i=0;i<4;i++)
+	
+	for(int i=0;i<4;i++)
+	{
+		inputFile>>normal[i]>>frozen[i]>>vip[i];
+	}
+	///////////////////////////////////////////////
+	for(int j=0;j<4;j++)
+	{
+		for(int i=0;i<normal[j];i++)
 		{
-			inputFile>>normal[i]>>frozen[i]>>vip[i];
+			Motorcycle* pM=new Motorcycle(i+1,s1+2*i);
+			NormalMotors[j].enqueue(pM,pM->MotorGetSpeed());
 		}
-		///////////////////////////////////////////////
-		for(int i=0;i<normal[0];i++)
-		{
-			Motorcycle* pM=new Motorcycle(i+1,s1);
-			NormalMotors[0].enqueue(pM,s1);
-		}
-		for(int i=0;i<frozen[0];i++)
-		{
-			Motorcycle* pM=new Motorcycle(i+1,s2);
-			FrozMotors[0].enqueue(pM,s2);
-		}
-		for(int i=0;i<vip[0];i++)
-		{
-			Motorcycle* pM=new Motorcycle(i+1,s3);
-			FastMotors[0].enqueue(pM,s3);
-		}
-		/////////////////////////////////////////////
-		for(int i=0;i<normal[1];i++)
-		{
-			Motorcycle* pM=new Motorcycle(i+1,s1);
-			NormalMotors[1].enqueue(pM,s1);
-		}
-		for(int i=0;i<frozen[1];i++)
-		{
-			Motorcycle* pM=new Motorcycle(i+1,s2);
-			FrozMotors[1].enqueue(pM,s2);
-		}
-		for(int i=0;i<vip[1];i++)
-		{
-			Motorcycle* pM=new Motorcycle(i+1,s3);
-			FastMotors[1].enqueue(pM,s3);
-		}
-		///////////////////////////////////////////
-		for(int i=0;i<normal[2];i++)
-		{
-			Motorcycle* pM=new Motorcycle(i+1,s1);
-			NormalMotors[2].enqueue(pM,s1);
-		}
-		for(int i=0;i<frozen[2];i++)
-		{
-			Motorcycle* pM=new Motorcycle(i+1,s2);
-			FrozMotors[2].enqueue(pM,s2);
-		}
-		for(int i=0;i<vip[2];i++)
-		{
-			Motorcycle* pM=new Motorcycle(i+1,s3);
-			FastMotors[2].enqueue(pM,s3);
-		}
-		///////////////////////////////////////////
-		for(int i=0;i<normal[3];i++)
-		{
-			Motorcycle* pM=new Motorcycle(i+1,s1);
-			NormalMotors[3].enqueue(pM,s1);
-		}
-		for(int i=0;i<frozen[3];i++)
-		{
-			Motorcycle* pM=new Motorcycle(i+1,s2);
-			FrozMotors[3].enqueue(pM,s2);
-		}
-		for(int i=0;i<vip[3];i++)
-		{
-			Motorcycle* pM=new Motorcycle(i+1,s3);
-			FastMotors[3].enqueue(pM,s3);
-		}
+	}
 
-		inputFile>>AutoProm;
-		int numofevents;
-		inputFile>>numofevents;
-		cout<<"num of events done"<<endl;
+	for(int j=0;j<4;j++)
+	{
+		for(int i=0;i<frozen[j];i++)
+		{
+			Motorcycle* pM=new Motorcycle(i+1,s2+i);
+			FrozMotors[j].enqueue(pM,pM->MotorGetSpeed());
+		}
+	}
+	for(int j=0;j<4;j++)
+	{
+		for(int i=0;i<vip[j];i++)
+		{
+			Motorcycle* pM=new Motorcycle(i+1,s3+3*i);
+			FastMotors[j].enqueue(pM,pM->MotorGetSpeed());
+		}
+	}
+	int promlimit;
+	inputFile>>promlimit;
+	int numofevents;
+	inputFile>>numofevents;
+	cout<<"num of events done"<<endl;
 		Event* ptr;
 		for(int i=0;i<numofevents;i++)
 		{
